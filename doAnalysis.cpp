@@ -169,14 +169,20 @@ int main(int argc, char** argv)
   }
 
   for (int ibin=1; ibin<=mt_corr->GetNbinsX(); ibin++) 
-    for (int jbin=1; jbin<=mt_corr->GetNbinsY(); jbin++) 
+    for (int jbin=1; jbin<=mt_corr->GetNbinsY(); jbin++) {
+      if (ibin == jbin) continue;
       mt_corr->SetBinContent(ibin, jbin, (mt_sum2->GetBinContent(ibin,jbin)/corr_n - mt_sum->GetBinContent(ibin)*mt_sum->GetBinContent(jbin)/(corr_n*corr_n))/(mt_rms->GetBinContent(ibin)*mt_rms->GetBinContent(jbin)));
+    }
   for (int ibin=1; ibin<=elecpt_corr->GetNbinsX(); ibin++) 
-    for (int jbin=1; jbin<=elecpt_corr->GetNbinsY(); jbin++) 
+    for (int jbin=1; jbin<=elecpt_corr->GetNbinsY(); jbin++) {
+      if (ibin == jbin) continue;
       elecpt_corr->SetBinContent(ibin, jbin, (elecpt_sum2->GetBinContent(ibin,jbin)/corr_n - elecpt_sum->GetBinContent(ibin)*elecpt_sum->GetBinContent(jbin)/(corr_n*corr_n))/(elecpt_rms->GetBinContent(ibin)*elecpt_rms->GetBinContent(jbin)));
+    }
   for (int ibin=1; ibin<=met_corr->GetNbinsX(); ibin++) 
-    for (int jbin=1; jbin<=met_corr->GetNbinsY(); jbin++) 
+    for (int jbin=1; jbin<=met_corr->GetNbinsY(); jbin++) {
+      if (ibin == jbin) continue;
       met_corr->SetBinContent(ibin, jbin, (met_sum2->GetBinContent(ibin,jbin)/corr_n - met_sum->GetBinContent(ibin)*met_sum->GetBinContent(jbin)/(corr_n*corr_n))/(met_rms->GetBinContent(ibin)*met_rms->GetBinContent(jbin)));
+    }
 
   for (int i=0; i<300/rebin; i++) {
     mt_dists[i] = new TH1D(TString::Format("mt_dists_%d", i), "", 25, mt_mean->GetBinContent(i)-5*mt_rms->GetBinContent(i), mt_mean->GetBinContent(i)+5*mt_rms->GetBinContent(i));
