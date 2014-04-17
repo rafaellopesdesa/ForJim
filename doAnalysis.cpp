@@ -40,7 +40,7 @@ int main(int argc, char** argv)
   gStyle->SetOptStat("MR");
   gStyle->SetOptFit(0111);
   gStyle->SetTitleBorderSize(0);
-  gStyle->SetPalette(54, 0); 
+  gStyle->SetPalette(1, 0); 
 
   // The ResBos mass
   const Double_t trueMass = 80.419;
@@ -845,6 +845,7 @@ int main(int argc, char** argv)
   mt_corr->SetTitle("Bin-by-bin correlation m_{T}; m_{T} (GeV); m_{T} (GeV)");
   mt_corr->GetXaxis()->SetRangeUser(65, 90);
   mt_corr->GetYaxis()->SetRangeUser(65, 90);
+  mt_corr->GetZaxis()->SetRangeUser(-0.2, 0.2);
   mt_corr->SetStats(0);
   mt_corr->Draw("colz");
   c1->Print("StatUnc.ps");
@@ -852,6 +853,7 @@ int main(int argc, char** argv)
   elecpt_corr->SetTitle("Bin-by-bin correlation Electron p_{T}; Electron p_{T} (GeV); Electron p_{T} (GeV)");
   elecpt_corr->GetXaxis()->SetRangeUser(32, 48);
   elecpt_corr->GetYaxis()->SetRangeUser(32, 48);
+  elecpt_corr->GetZaxis()->SetRangeUser(-0.2, 0.2);
   elecpt_corr->SetStats(0);
   elecpt_corr->Draw("colz");
   c1->Print("StatUnc.ps");  
@@ -859,6 +861,7 @@ int main(int argc, char** argv)
   met_corr->SetTitle("Bin-by-bin correlation MET; MET (GeV); MET (GeV)");
   met_corr->GetXaxis()->SetRangeUser(32, 48);
   met_corr->GetYaxis()->SetRangeUser(32, 48);
+  met_corr->GetZaxis()->SetRangeUser(-0.2, 0.2);
   met_corr->SetStats(0);
   met_corr->Draw("colz");
   c1->Print("StatUnc.ps");  
