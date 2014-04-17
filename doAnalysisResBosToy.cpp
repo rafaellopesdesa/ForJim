@@ -17,6 +17,7 @@
 #include <iostream>
 
 #undef doGaussian
+#define rebin 10
 
 using namespace std;
 
@@ -45,8 +46,8 @@ int main(int argc, char** argv)
   const Double_t trueMass = 80.419;
 
   // Define what we want
-  TH1D* mt_dists[300];
-  TH1D* mt_poisson[300];
+  TH1D* mt_dists[300/rebin];
+  TH1D* mt_poisson[300/rebin];
 
   TH1D* mtUnbiasedPull = new TH1D("mtUnbiasedPull", "", 50, -5., 5.);
   TH1D* mtPull = new TH1D("mtPull", "", 50, -5., 5.);
@@ -60,12 +61,12 @@ int main(int argc, char** argv)
 
   // Reads the data
   cout << "Getting the data" << endl;
-  TH1D* mt_sum = new TH1D("mt_sum", "", 300, 50., 200.);
-  TH1D* mt_mean = new TH1D("mt_mean", "", 300, 50., 200.);
-  TH1D* mt_rms = new TH1D("mt_rms", "", 300, 50., 200.);
-  TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300, 50., 200.);
-  TH2D* mt_sum2 = new TH2D("mt_sum2", "", 300, 50., 200., 300, 50., 200.);
-  TH2D* mt_corr = new TH2D("mt_corr", "", 300, 50., 200., 300, 50., 200.);
+  TH1D* mt_sum = new TH1D("mt_sum", "", 300/rebin, 50., 200.);
+  TH1D* mt_mean = new TH1D("mt_mean", "", 300/rebin, 50., 200.);
+  TH1D* mt_rms = new TH1D("mt_rms", "", 300/rebin, 50., 200.);
+  TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300/rebin, 50., 200.);
+  TH2D* mt_sum2 = new TH2D("mt_sum2", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
+  TH2D* mt_corr = new TH2D("mt_corr", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
   Double_t corr_n = 0;
 
   ifstream _fileList(argv[2]);
@@ -76,6 +77,7 @@ int main(int argc, char** argv)
     TFile* tempFile = TFile::Open(_reader);
     if (!tempFile->IsOpen()) continue;
     TH1D* tempmt = (TH1D*) tempFile->Get("default/hWcandMt_CC");
+    tempmt->Rebin(rebin);
     for (int ibin=1; ibin<=tempmt->GetNbinsX(); ibin++) {
       mt_sum->Fill(tempmt->GetXaxis()->GetBinCenter(ibin), tempmt->GetBinContent(ibin));
       for (int jbin=1; jbin<=tempmt->GetNbinsX(); jbin++) {
@@ -97,7 +99,7 @@ int main(int argc, char** argv)
       mt_corr->SetBinContent(ibin, jbin, (mt_sum2->GetBinContent(ibin,jbin)/corr_n - mt_sum->GetBinContent(ibin)*mt_sum->GetBinContent(jbin)/(corr_n*corr_n))/(mt_rms->GetBinContent(ibin)*mt_rms->GetBinContent(jbin)));
     }
 
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     mt_dists[i] = new TH1D(TString::Format("mt_dists_%d", i), "", 25, mt_mean->GetBinContent(i)-5*mt_rms->GetBinContent(i), mt_mean->GetBinContent(i)+5*mt_rms->GetBinContent(i));
     mt_poisson[i] = new TH1D(TString::Format("mt_poisson_%d", i), "", 25, mt_mean->GetBinContent(i)-5*mt_rms->GetBinContent(i), mt_mean->GetBinContent(i)+5*mt_rms->GetBinContent(i));
   }
@@ -108,10 +110,11 @@ int main(int argc, char** argv)
     TFile* tempFile = TFile::Open(_reader);
     if (!tempFile->IsOpen()) continue;
     TH1D* tempmt = (TH1D*) tempFile->Get("default/hWcandMt_CC");
-    for (int i=0; i<300; i++)
+    tempmt->Rebin(rebin)
+    for (int i=0; i<300/rebin; i++)
       mt_dists[i]->Fill(tempmt->GetBinContent(i));
   }
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     Double_t mt_dists_integral = mt_dists[i]->Integral();
     if (mt_dists_integral == 0) continue;
     mt_dists[i]->Sumw2();
@@ -188,7 +191,7 @@ int main(int argc, char** argv)
   mtJKSigma->Write();
   mtJKUnbiasedSigma->Write();
 
-  for (int i=0; i<300; i++)
+  for (int i=0; i<300/rebin; i++)
     mt_dists[i]->Write();
 
   outputFile->Close();
@@ -299,7 +302,7 @@ int main(int argc, char** argv)
   c1->Clear();
   c1->Divide(2,2);
   Int_t __i = 1;
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     c1->cd(__i);
     Double_t mt_poisson_integral = mt_poisson[i]->Integral();
     mt_poisson[i]->Sumw2();
