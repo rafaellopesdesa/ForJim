@@ -16,7 +16,7 @@
 #include <fstream>
 #include <iostream>
 
-#define doGaussian
+#undef doGaussian
 
 using namespace std;
 
