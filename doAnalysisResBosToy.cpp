@@ -110,7 +110,7 @@ int main(int argc, char** argv)
     TFile* tempFile = TFile::Open(_reader);
     if (!tempFile->IsOpen()) continue;
     TH1D* tempmt = (TH1D*) tempFile->Get("default/hWcandMt_CC");
-    tempmt->Rebin(rebin)
+    tempmt->Rebin(rebin);
     for (int i=0; i<300/rebin; i++)
       mt_dists[i]->Fill(tempmt->GetBinContent(i));
   }
