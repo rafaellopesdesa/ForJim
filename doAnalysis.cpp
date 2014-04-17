@@ -17,6 +17,7 @@
 #include <iostream>
 
 #undef doGaussian
+#define rebin 1
 
 using namespace std;
 
@@ -45,13 +46,13 @@ int main(int argc, char** argv)
   const Double_t trueMass = 80.419;
 
   // Define what we want
-  TH1D* mt_dists[300];
-  TH1D* pt_dists[200];
-  TH1D* met_dists[200];
+  TH1D* mt_dists[300/rebin];
+  TH1D* pt_dists[200/rebin];
+  TH1D* met_dists[200/rebin];
 
-  TH1D* mt_poisson[300];
-  TH1D* pt_poisson[200];
-  TH1D* met_poisson[200];
+  TH1D* mt_poisson[300/rebin];
+  TH1D* pt_poisson[200/rebin];
+  TH1D* met_poisson[200/rebin];
 
   TH1D* mtUnbiasedPull = new TH1D("mtUnbiasedPull", "", 50, -5., 5.);
   TH1D* ptUnbiasedPull = new TH1D("ptUnbiasedPull", "", 50, -5., 5.);
@@ -96,24 +97,24 @@ int main(int argc, char** argv)
 
   // Reads the data
   cout << "Getting the data" << endl;
-  TH1D* mt_sum = new TH1D("mt_sum", "", 300, 50., 200.);
-  TH1D* mt_mean = new TH1D("mt_mean", "", 300, 50., 200.);
-  TH1D* mt_rms = new TH1D("mt_rms", "", 300, 50., 200.);
-  TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300, 50., 200.);
-  TH2D* mt_sum2 = new TH2D("mt_sum2", "", 300, 50., 200., 300, 50., 200.);
-  TH2D* mt_corr = new TH2D("mt_corr", "", 300, 50., 200., 300, 50., 200.);
-  TH1D* elecpt_sum = new TH1D("elecpt_sum", "", 200, 0., 100.);
-  TH1D* elecpt_mean = new TH1D("elecpt_mean", "", 200, 0., 100.);
-  TH1D* elecpt_rms = new TH1D("elecpt_rms", "", 200, 0., 100.);
-  TH1D* elecpt_rmsfrac = new TH1D("elecpt_rmsfrac", "", 200, 0., 100.);
-  TH2D* elecpt_sum2 = new TH2D("elecpt_sum2", "", 200, 0., 100., 200, 0., 100.);
-  TH2D* elecpt_corr = new TH2D("elecpt_corr", "", 200, 0., 100., 200, 0., 100.);
-  TH1D* met_sum = new TH1D("met_sum", "", 200, 0., 100.);
-  TH1D* met_mean = new TH1D("met_mean", "", 200, 0., 100.);
-  TH1D* met_rms = new TH1D("met_rms", "", 200, 0., 100.);
-  TH1D* met_rmsfrac = new TH1D("met_rmsfrac", "", 200, 0., 100.);
-  TH2D* met_sum2 = new TH2D("met_sum2", "", 200, 0., 100., 200, 0., 100.);
-  TH2D* met_corr = new TH2D("met_corr", "", 200, 0., 100., 200, 0., 100.);
+  TH1D* mt_sum = new TH1D("mt_sum", "", 300/rebin, 50., 200.);
+  TH1D* mt_mean = new TH1D("mt_mean", "", 300/rebin, 50., 200.);
+  TH1D* mt_rms = new TH1D("mt_rms", "", 300/rebin, 50., 200.);
+  TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300/rebin, 50., 200.);
+  TH2D* mt_sum2 = new TH2D("mt_sum2", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
+  TH2D* mt_corr = new TH2D("mt_corr", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
+  TH1D* elecpt_sum = new TH1D("elecpt_sum", "", 200/rebin, 0., 100.);
+  TH1D* elecpt_mean = new TH1D("elecpt_mean", "", 200/rebin, 0., 100.);
+  TH1D* elecpt_rms = new TH1D("elecpt_rms", "", 200/rebin, 0., 100.);
+  TH1D* elecpt_rmsfrac = new TH1D("elecpt_rmsfrac", "", 200/rebin, 0., 100.);
+  TH2D* elecpt_sum2 = new TH2D("elecpt_sum2", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
+  TH2D* elecpt_corr = new TH2D("elecpt_corr", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
+  TH1D* met_sum = new TH1D("met_sum", "", 200/rebin, 0., 100.);
+  TH1D* met_mean = new TH1D("met_mean", "", 200/rebin, 0., 100.);
+  TH1D* met_rms = new TH1D("met_rms", "", 200/rebin, 0., 100.);
+  TH1D* met_rmsfrac = new TH1D("met_rmsfrac", "", 200/rebin, 0., 100.);
+  TH2D* met_sum2 = new TH2D("met_sum2", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
+  TH2D* met_corr = new TH2D("met_corr", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
   Double_t corr_n = 0;
 
   ifstream _fileList(argv[2]);
@@ -126,6 +127,9 @@ int main(int argc, char** argv)
     TH1D* tempmt = (TH1D*) tempFile->Get("default/hWcandMt_CC");
     TH1D* tempelecpt = (TH1D*) tempFile->Get("default/hWcandElecPt_CC");
     TH1D* tempmet = (TH1D*) tempFile->Get("default/hWcandMet_CC");
+    tempmt->Rebin(rebin);
+    tempelecpt->Rebin(rebin);
+    tempmet->Rebin(rebin);
     for (int ibin=1; ibin<=tempmt->GetNbinsX(); ibin++) {
       mt_sum->Fill(tempmt->GetXaxis()->GetBinCenter(ibin), tempmt->GetBinContent(ibin));
       for (int jbin=1; jbin<=tempmt->GetNbinsX(); jbin++) {
@@ -174,15 +178,15 @@ int main(int argc, char** argv)
     for (int jbin=1; jbin<=met_corr->GetNbinsY(); jbin++) 
       met_corr->SetBinContent(ibin, jbin, (met_sum2->GetBinContent(ibin,jbin)/corr_n - met_sum->GetBinContent(ibin)*met_sum->GetBinContent(jbin)/(corr_n*corr_n))/(met_rms->GetBinContent(ibin)*met_rms->GetBinContent(jbin)));
 
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     mt_dists[i] = new TH1D(TString::Format("mt_dists_%d", i), "", 25, mt_mean->GetBinContent(i)-5*mt_rms->GetBinContent(i), mt_mean->GetBinContent(i)+5*mt_rms->GetBinContent(i));
     mt_poisson[i] = new TH1D(TString::Format("mt_poisson_%d", i), "", 25, mt_mean->GetBinContent(i)-5*mt_rms->GetBinContent(i), mt_mean->GetBinContent(i)+5*mt_rms->GetBinContent(i));
   }
-  for (int i=0; i<200; i++) {
+  for (int i=0; i<200/rebin; i++) {
     pt_dists[i] = new TH1D(TString::Format("pt_dists_%d", i), "", 25, elecpt_mean->GetBinContent(i)-5*elecpt_rms->GetBinContent(i), elecpt_mean->GetBinContent(i)+5*elecpt_rms->GetBinContent(i));
     pt_poisson[i] = new TH1D(TString::Format("pt_poisson_%d", i), "", 25, elecpt_mean->GetBinContent(i)-5*elecpt_rms->GetBinContent(i), elecpt_mean->GetBinContent(i)+5*elecpt_rms->GetBinContent(i));
   }
-  for (int i=0; i<200; i++) {
+  for (int i=0; i<200/rebin; i++) {
     met_dists[i] = new TH1D(TString::Format("met_dists_%d", i), "", 25, met_mean->GetBinContent(i)-5*met_rms->GetBinContent(i), met_mean->GetBinContent(i)+5*met_rms->GetBinContent(i));
     met_poisson[i] = new TH1D(TString::Format("met_poisson_%d", i), "", 25, met_mean->GetBinContent(i)-5*met_rms->GetBinContent(i), met_mean->GetBinContent(i)+5*met_rms->GetBinContent(i));
   }
@@ -195,14 +199,17 @@ int main(int argc, char** argv)
     TH1D* tempmt = (TH1D*) tempFile->Get("default/hWcandMt_CC");
     TH1D* tempelecpt = (TH1D*) tempFile->Get("default/hWcandElecPt_CC");
     TH1D* tempmet = (TH1D*) tempFile->Get("default/hWcandMet_CC");
-    for (int i=0; i<300; i++)
+    tempmt->Rebin(rebin);
+    tempelecpt->Rebin(rebin);
+    tempmet->Rebin(rebin);
+    for (int i=0; i<300/rebin; i++)
       mt_dists[i]->Fill(tempmt->GetBinContent(i));
-    for (int i=0; i<200; i++)
+    for (int i=0; i<200/rebin; i++)
       pt_dists[i]->Fill(tempelecpt->GetBinContent(i));
-    for (int i=0; i<200; i++)
+    for (int i=0; i<200/rebin; i++)
       met_dists[i]->Fill(tempmet->GetBinContent(i));
   }
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     Double_t mt_dists_integral = mt_dists[i]->Integral();
     if (mt_dists_integral == 0) continue;
     mt_dists[i]->Sumw2();
@@ -215,7 +222,7 @@ int main(int argc, char** argv)
 #endif
     }
   }
-  for (int i=0; i<200; i++) {
+  for (int i=0; i<200/rebin; i++) {
     Double_t pt_dists_integral = pt_dists[i]->Integral();
     if (pt_dists_integral == 0) continue;
     pt_dists[i]->Sumw2();
@@ -228,7 +235,7 @@ int main(int argc, char** argv)
 #endif
     }
   }
-  for (int i=0; i<200; i++) {
+  for (int i=0; i<200/rebin; i++) {
     Double_t met_dists_integral = met_dists[i]->Integral();
     if (met_dists_integral == 0) continue;
     met_dists[i]->Sumw2();
@@ -607,11 +614,11 @@ int main(int argc, char** argv)
   metmtJKCorr->Write();
   ptmetJKCorr->Write();
 
-  for (int i=0; i<300; i++)
+  for (int i=0; i<300/rebin; i++)
     mt_dists[i]->Write();
-  for (int i=0; i<200; i++)
+  for (int i=0; i<200/rebin; i++)
     pt_dists[i]->Write();
-  for (int i=0; i<200; i++)
+  for (int i=0; i<200/rebin; i++)
     met_dists[i]->Write();
 
   outputFile->Close();
@@ -955,7 +962,7 @@ int main(int argc, char** argv)
   c1->Clear();
   c1->Divide(2,2);
   Int_t __i = 1;
-  for (int i=0; i<300; i++) {
+  for (int i=0; i<300/rebin; i++) {
     c1->cd(__i);
     Double_t mt_poisson_integral = mt_poisson[i]->Integral();
     mt_poisson[i]->Sumw2();
