@@ -63,6 +63,7 @@ int main(int argc, char** argv)
   cout << "Getting the data" << endl;
   TH1D* mt_sum = new TH1D("mt_sum", "", 300/rebin, 50., 200.);
   TH1D* mt_mean = new TH1D("mt_mean", "", 300/rebin, 50., 200.);
+  TH1D* mt_sqrtmean = new TH1D("mt_sqrtmean", "", 300/rebin, 50., 200.);
   TH1D* mt_rms = new TH1D("mt_rms", "", 300/rebin, 50., 200.);
   TH1D* mt_rms_ratio = new TH1D("mt_rms_ratio", "", 300/rebin, 50., 200.);
   TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300/rebin, 50., 200.);
@@ -91,10 +92,11 @@ int main(int argc, char** argv)
   _fileList.close();
   for (int ibin=1; ibin<=mt_rms->GetNbinsX(); ibin++) {
     mt_mean->SetBinContent(ibin, mt_sum->GetBinContent(ibin)/corr_n);
+    mt_sqrtmean->SetBinContent(ibin, TMath::Sqrt(mt_sum->GetBinContent(ibin)/corr_n));
     mt_rms->SetBinContent(ibin, TMath::Sqrt(mt_sum2->GetBinContent(ibin, ibin)/corr_n-mt_sum->GetBinContent(ibin)*mt_sum->GetBinContent(ibin)/(corr_n*corr_n)));
     mt_rmsfrac->SetBinContent(ibin, mt_rms->GetBinContent(ibin)/mt_mean->GetBinContent(ibin));
   }
-  mt_rms_ratio->Divide(mt_rms, mt_mean, 1., 1.); 
+  mt_rms_ratio->Divide(mt_rms, mt_sqrtmean, 1., 1.); 
   for (int ibin=1; ibin<=mt_corr->GetNbinsX(); ibin++) 
     for (int jbin=1; jbin<=mt_corr->GetNbinsY(); jbin++) {
       if (ibin == jbin) continue;
