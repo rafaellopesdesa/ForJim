@@ -276,7 +276,7 @@ int main(int argc, char** argv)
   mt_corr->GetYaxis()->SetRangeUser(65, 90);
   mt_corr->GetZaxis()->SetRangeUser(-0.4, 0.4);
   mt_corr->SetStats(0);
-  mt_corr->Draw("colz");
+  mt_corr->Draw("colz, text");
   c1->Print("StatUnc.ps");
 
   mtUnbiasedPull->SetTitle("m_{T} unbiased pull; Unbiased pull; Pseudo-experiments");

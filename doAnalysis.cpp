@@ -851,7 +851,7 @@ int main(int argc, char** argv)
   mt_corr->GetYaxis()->SetRangeUser(65, 90);
   mt_corr->GetZaxis()->SetRangeUser(-0.4, 0.4);
   mt_corr->SetStats(0);
-  mt_corr->Draw("colz");
+  mt_corr->Draw("colz, text");
   c1->Print("StatUnc.ps");
 
   elecpt_corr->SetTitle("Bin-by-bin correlation Electron p_{T}; Electron p_{T} (GeV); Electron p_{T} (GeV)");
@@ -859,7 +859,7 @@ int main(int argc, char** argv)
   elecpt_corr->GetYaxis()->SetRangeUser(32, 48);
   elecpt_corr->GetZaxis()->SetRangeUser(-0.4, 0.4);
   elecpt_corr->SetStats(0);
-  elecpt_corr->Draw("colz");
+  elecpt_corr->Draw("colz, text");
   c1->Print("StatUnc.ps");  
 
   met_corr->SetTitle("Bin-by-bin correlation MET; MET (GeV); MET (GeV)");
@@ -867,7 +867,7 @@ int main(int argc, char** argv)
   met_corr->GetYaxis()->SetRangeUser(32, 48);
   met_corr->GetZaxis()->SetRangeUser(-0.4, 0.4);
   met_corr->SetStats(0);
-  met_corr->Draw("colz");
+  met_corr->Draw("colz, text");
   c1->Print("StatUnc.ps");  
 
   mtUnbiasedPull->SetTitle("m_{T} unbiased pull; Unbiased pull; Pseudo-experiments");
