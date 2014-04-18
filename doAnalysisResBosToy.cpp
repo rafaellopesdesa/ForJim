@@ -17,7 +17,7 @@
 #include <iostream>
 
 #undef doGaussian
-#define rebin 10
+#define rebin 1
 
 using namespace std;
 
@@ -272,7 +272,7 @@ int main(int argc, char** argv)
   mt_corr->SetTitle("Bin-by-bin correlation m_{T}; m_{T} (GeV); m_{T} (GeV)");
   mt_corr->GetXaxis()->SetRangeUser(65, 90);
   mt_corr->GetYaxis()->SetRangeUser(65, 90);
-  mt_corr->GetZaxis()->SetRangeUser(-0.2, 0.2);
+  mt_corr->GetZaxis()->SetRangeUser(-0.4, 0.4);
   mt_corr->SetStats(0);
   mt_corr->Draw("colz");
   c1->Print("StatUnc.ps");
