@@ -100,18 +100,21 @@ int main(int argc, char** argv)
   TH1D* mt_sum = new TH1D("mt_sum", "", 300/rebin, 50., 200.);
   TH1D* mt_mean = new TH1D("mt_mean", "", 300/rebin, 50., 200.);
   TH1D* mt_rms = new TH1D("mt_rms", "", 300/rebin, 50., 200.);
+  TH1D* mt_rms_ratio = new TH1D("mt_rms_ratio", "", 300/rebin, 50., 200.);
   TH1D* mt_rmsfrac = new TH1D("mt_rmsfrac", "", 300/rebin, 50., 200.);
   TH2D* mt_sum2 = new TH2D("mt_sum2", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
   TH2D* mt_corr = new TH2D("mt_corr", "", 300/rebin, 50., 200., 300/rebin, 50., 200.);
   TH1D* elecpt_sum = new TH1D("elecpt_sum", "", 200/rebin, 0., 100.);
   TH1D* elecpt_mean = new TH1D("elecpt_mean", "", 200/rebin, 0., 100.);
   TH1D* elecpt_rms = new TH1D("elecpt_rms", "", 200/rebin, 0., 100.);
+  TH1D* elecpt_rms_ratio = new TH1D("elecpt_rms_ratio", "", 200/rebin, 0., 100.);
   TH1D* elecpt_rmsfrac = new TH1D("elecpt_rmsfrac", "", 200/rebin, 0., 100.);
   TH2D* elecpt_sum2 = new TH2D("elecpt_sum2", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
   TH2D* elecpt_corr = new TH2D("elecpt_corr", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
   TH1D* met_sum = new TH1D("met_sum", "", 200/rebin, 0., 100.);
   TH1D* met_mean = new TH1D("met_mean", "", 200/rebin, 0., 100.);
   TH1D* met_rms = new TH1D("met_rms", "", 200/rebin, 0., 100.);
+  TH1D* met_rms_ratio = new TH1D("met_rms_ratio", "", 200/rebin, 0., 100.);
   TH1D* met_rmsfrac = new TH1D("met_rmsfrac", "", 200/rebin, 0., 100.);
   TH2D* met_sum2 = new TH2D("met_sum2", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
   TH2D* met_corr = new TH2D("met_corr", "", 200/rebin, 0., 100., 200/rebin, 0., 100.);
@@ -157,16 +160,19 @@ int main(int argc, char** argv)
     mt_rms->SetBinContent(ibin, TMath::Sqrt(mt_sum2->GetBinContent(ibin, ibin)/corr_n-mt_sum->GetBinContent(ibin)*mt_sum->GetBinContent(ibin)/(corr_n*corr_n)));
     mt_rmsfrac->SetBinContent(ibin, mt_rms->GetBinContent(ibin)/mt_mean->GetBinContent(ibin));
   }
+  mt_rms_ratio->Divide(mt_rms, mt_mean, 1., 1.);
   for (int ibin=1; ibin<=elecpt_rms->GetNbinsX(); ibin++) {
     elecpt_mean->SetBinContent(ibin, elecpt_sum->GetBinContent(ibin)/corr_n);
     elecpt_rms->SetBinContent(ibin, TMath::Sqrt(elecpt_sum2->GetBinContent(ibin, ibin)/corr_n-elecpt_sum->GetBinContent(ibin)*elecpt_sum->GetBinContent(ibin)/(corr_n*corr_n)));
     elecpt_rmsfrac->SetBinContent(ibin, elecpt_rms->GetBinContent(ibin)/elecpt_mean->GetBinContent(ibin));
   }
+  elecpt_rms_ratio->Divide(elecpt_rms, elecpt_mean, 1., 1.);
   for (int ibin=1; ibin<=met_rms->GetNbinsX(); ibin++) {
     met_mean->SetBinContent(ibin, met_sum->GetBinContent(ibin)/corr_n);
     met_rms->SetBinContent(ibin, TMath::Sqrt(met_sum2->GetBinContent(ibin, ibin)/corr_n-met_sum->GetBinContent(ibin)*met_sum->GetBinContent(ibin)/(corr_n*corr_n)));
     met_rmsfrac->SetBinContent(ibin, met_rms->GetBinContent(ibin)/met_mean->GetBinContent(ibin));
   }
+  met_rms_ratio->Divide(met_rms, met_mean, 1., 1.);
 
   for (int ibin=1; ibin<=mt_corr->GetNbinsX(); ibin++) 
     for (int jbin=1; jbin<=mt_corr->GetNbinsY(); jbin++) {
@@ -580,6 +586,10 @@ int main(int argc, char** argv)
   elecpt_rms->Write();
   met_rms->Write();
 
+  mt_rms_ratio->Write();
+  elecpt_rms_ratio->Write();
+  met_rms_ratio->Write();
+
   mt_rmsfrac->Write();
   elecpt_rmsfrac->Write();
   met_rmsfrac->Write();
@@ -643,8 +653,6 @@ int main(int argc, char** argv)
     mt_rms->SetLineColor(kRed);
     mt_rms->Sumw2();
     mt_mean->Sumw2();
-    TH1D* mt_rms_ratio = (TH1D*) mt_mean->Clone();
-    mt_rms_ratio->Divide(mt_rms, mt_mean, 1., 1.);
     double __sum = 0;
     double __n = 0;
     for (int i=1; i<=mt_rms_ratio->GetNbinsX(); i++) {
@@ -713,8 +721,6 @@ int main(int argc, char** argv)
     met_rms->SetLineColor(kRed);
     met_rms->Sumw2();
     met_mean->Sumw2();
-    TH1D* met_rms_ratio = (TH1D*) met_mean->Clone();
-    met_rms_ratio->Divide(met_rms, met_mean, 1., 1.);
     double __sum = 0;
     double __n = 0;
     for (int i=1; i<=met_rms_ratio->GetNbinsX(); i++) {
@@ -783,8 +789,6 @@ int main(int argc, char** argv)
     elecpt_rms->SetLineColor(kRed);
     elecpt_rms->Sumw2();
     elecpt_mean->Sumw2();
-    TH1D* elecpt_rms_ratio = (TH1D*) elecpt_mean->Clone();
-    elecpt_rms_ratio->Divide(elecpt_rms, elecpt_mean, 1., 1.);
     double __sum = 0;
     double __n = 0;
     for (int i=1; i<=elecpt_rms_ratio->GetNbinsX(); i++) {
